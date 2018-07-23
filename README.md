@@ -1,3 +1,27 @@
+# APP模块
+1. **GlobalConfiguration:**  App 的全局配置信息在此配置, 需要将此实现类声明到 AndroidManifest 中,BaseURL的设定,日志框架的选型和开关,Application/Activity/Fragment的生命周期注入实现类在这里绑定,各种配置信息的设置就在这里
+2. **AppLifecyclesImpl:** 用于整个APP的Application的管理,AppLifecycles 的所有方法都会在基类 Application 的对应的生命周期中被调用,所以在对应的方法中可以扩展一些自己需要的逻辑,初始化日志系统/设置ButterKnife的模式/初始化LeakCanary内存泄漏检测,**常用于第三方的初始化** ;
+3. **ActivityLifecycleCallbacksImpl:**  用于所有Activity生命周期的管理, ActivityLifecycleCallbacks 的所有方法都会在 Activity (包括三方库) 的对应的生命周期中被调用,所以在对应的方法中可以扩展一些自己需要的逻辑
+4. **FragmentLifecycleCallbacksImpl:**  Fragment的生命周期的管理,注意此处会先调用arms依赖包下的com.jess.arms.integration.FragmentLifecycle(FragmentLifecycleCallbacks的默认实现类)的对应方法,然后再调用FragmentLifecycleCallbacksImpl的对应方法
+5. **GlobalHttpHandlerImpl:** 网络请求的实现类,这里可以在请求服务器之前可以拿到request,做一些操作比如给request统一添加token或者header以及参数加密等操作, 可以先客户端一步拿到每一次http请求的结果
+6. **ResponseErrorListenerImpl:** 网络请求响应错误时的触发实现类,可根据不同的错误码进行统一响应,如弹出提示
+7. **指定 Application:**  本框架想要正常运行需要使用框架提供的 BaseApplication ,当然您也可以自定义一个 Application 继承于它,也可以不用继承,直接将 BaseApplication 的代码复制到您自定义的 Application 里(里面只有几行代码),但是我并不推荐您使用后面的两种方式,因为本框架已经向开发者提供了 ConfigModule#injectAppLifecycle 方法,可以在运行时动态的向 BaseApplication 中插入任意代码,这样即使您不需要自定义 Application ,也可以做到初始化自己的业务
+8. **关于自定义View:** 实现 AndroidAutoLayout 规范的 {@link CardView}可使用 MVP_generator_solution 中的 AutoView 模版生成各种符合 AndroidAutoLayout 规范的 {@link View}
+9. **一键生成Fragment/Activity:** new的时候选择MVPArms全家桶,若需修改模板则在目录D:\Program Files\Android\Android Studio\plugins\android\lib\templates\activities\MVPArmsTemplate\root\src\app_package修改对应的文件
+6. **Activity/Present的方法执行顺序:**  Activity的onCreate befor -> Presenter的onStart befor -> Presenter的onStart -> Presenter的构造方法(因为在父类的构造方法中调用的onStart) -> Activity的initData ->Activity的onCreate
+6. **关于图片的选择:** 在zeplin上选择平台后在右侧选择Density:mdpi ,里面的设计尺寸就能对应上了,图片需要下载svg图,在使用时使用AS处理修改width和viewportHeight相同,命名在前面添加svg_,也可以使用IOS的三倍图放在xxhdpi文件夹下
+6. **:**
+
+
+
+# arms依赖包
+1. **GlobalConfigModule:** 框架独创的建造者模式 ,可向框架中注入外部配置的自定义参数
+2. **IView/IPresenter/IModel:** 框架要求框架中的每个 View/Presenter/Model 都需要实现此类, 以满足规范,对于经常使用的关于UI的方法可以定义到IView中,如显示隐藏进度条,和显示文字消息
+3. **GlideConfiguration:** 用于配置缓存文件夹,切换图片请求框架等操作,图片缓存文件最大值的定义
+3. **GlideArms:** 可以当成Glide来使用
+3. **:**
+
+
 ![Logo](image/arms_banner_v1.0.jpg)
 
 <p align="center">
