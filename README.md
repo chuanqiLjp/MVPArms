@@ -8,9 +8,9 @@
 7. **指定 Application:**  本框架想要正常运行需要使用框架提供的 BaseApplication ,当然您也可以自定义一个 Application 继承于它,也可以不用继承,直接将 BaseApplication 的代码复制到您自定义的 Application 里(里面只有几行代码),但是我并不推荐您使用后面的两种方式,因为本框架已经向开发者提供了 ConfigModule#injectAppLifecycle 方法,可以在运行时动态的向 BaseApplication 中插入任意代码,这样即使您不需要自定义 Application ,也可以做到初始化自己的业务
 8. **关于自定义View:** 实现 AndroidAutoLayout 规范的 {@link CardView}可使用 MVP_generator_solution 中的 AutoView 模版生成各种符合 AndroidAutoLayout 规范的 {@link View}
 9. **一键生成Fragment/Activity:** new的时候选择MVPArms全家桶,若需修改模板则在目录D:\Program Files\Android\Android Studio\plugins\android\lib\templates\activities\MVPArmsTemplate\root\src\app_package修改对应的文件
-6. **Activity/Present的方法执行顺序:**  Activity的onCreate befor -> Presenter的onStart befor -> Presenter的onStart -> Presenter的构造方法(因为在父类的构造方法中调用的onStart) -> Activity的initData ->Activity的onCreate
-6. **关于图片的选择:** 在zeplin上选择平台后在右侧选择Density:mdpi ,里面的设计尺寸就能对应上了,图片需要下载svg图,在使用时使用AS处理修改width和viewportHeight相同,命名在前面添加svg_,也可以使用IOS的三倍图放在xxhdpi文件夹下
-6. **:**
+10. **Activity/Present的方法执行顺序:**  Activity的onCreate befor -> Presenter的onStart befor -> Presenter的onStart -> Presenter的构造方法(因为在父类的构造方法中调用的onStart) -> Activity的initData ->Activity的onCreate
+11. **关于图片的选择:** 在zeplin上选择平台后在右侧选择Density:mdpi ,里面的设计尺寸就能对应上了,图片需要下载svg图,在使用时使用AS处理修改width和viewportHeight相同,命名在前面添加svg_,也可以使用IOS的三倍图放在xxhdpi文件夹下
+12. **:**
 
 
 
@@ -18,8 +18,8 @@
 1. **GlobalConfigModule:** 框架独创的建造者模式 ,可向框架中注入外部配置的自定义参数
 2. **IView/IPresenter/IModel:** 框架要求框架中的每个 View/Presenter/Model 都需要实现此类, 以满足规范,对于经常使用的关于UI的方法可以定义到IView中,如显示隐藏进度条,和显示文字消息
 3. **GlideConfiguration:** 用于配置缓存文件夹,切换图片请求框架等操作,图片缓存文件最大值的定义
-3. **GlideArms:** 可以当成Glide来使用
-3. **:**
+4. **GlideArms:** 可以当成Glide来使用
+5. **:**
 
 
 ![Logo](image/arms_banner_v1.0.jpg)
