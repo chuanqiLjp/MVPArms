@@ -59,7 +59,7 @@ public final class GlobalConfiguration implements ConfigModule {
             builder.printHttpLogLevel(RequestInterceptor.Level.NONE);
         }
 
-        builder.baseurl(Api.APP_DOMAIN)
+        builder.baseurl(Api.BASE_URL)
                 //强烈建议自己自定义图片加载逻辑,因为默认提供的 GlideImageLoaderStrategy 并不能满足复杂的需求
                 //请参考 https://github.com/JessYanCoding/MVPArms/wiki#3.4
 //                .imageLoaderStrategy(new CustomLoaderStrategy())
@@ -128,12 +128,13 @@ public final class GlobalConfiguration implements ConfigModule {
                             .serializeNulls()//支持序列化null的参数
                             .enableComplexMapKeySerialization();//支持将序列化key为object的map,默认只能序列化key为string的map
                 })
-                .retrofitConfiguration((context1, retrofitBuilder) -> {//这里可以自己自定义配置Retrofit的参数, 甚至您可以替换框架配置好的 OkHttpClient 对象 (但是不建议这样做, 这样做您将损失框架提供的很多功能)
+                .retrofitConfiguration((context1, retrofitBuilder) -> {//这里可以自己自定义配置Retrofit的参数,甚至你可以替换系统配置好的okhttp对象
 //                    retrofitBuilder.addConverterFactory(FastJsonConverterFactory.create());//比如使用fastjson替代gson
                 })
                 .okhttpConfiguration((context1, okhttpBuilder) -> {//这里可以自己自定义配置Okhttp的参数
 //                    okhttpBuilder.sslSocketFactory(); //支持 Https,详情请百度
                     okhttpBuilder.writeTimeout(10, TimeUnit.SECONDS);
+                    okhttpBuilder.readTimeout(300,TimeUnit.SECONDS);//设置一个较大的读取超时时间,防止上传文件超时
                     //使用一行代码监听 Retrofit／Okhttp 上传下载进度监听,以及 Glide 加载进度监听 详细使用方法查看 https://github.com/JessYanCoding/ProgressManager
                     ProgressManager.getInstance().with(okhttpBuilder);
                     //让 Retrofit 同时支持多个 BaseUrl 以及动态改变 BaseUrl. 详细使用请方法查看 https://github.com/JessYanCoding/RetrofitUrlManager
@@ -163,26 +164,10 @@ public final class GlobalConfiguration implements ConfigModule {
 
     @Override
     public void injectFragmentLifecycle(Context context, List<FragmentManager.FragmentLifecycleCallbacks> lifecycles) {
-        lifecycles.add(new FragmentManager.FragmentLifecycleCallbacks() {
-
-            @Override
-            public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
-                // 在配置变化的时候将这个 Fragment 保存下来,在 Activity 由于配置变化重建时重复利用已经创建的 Fragment。
-                // https://developer.android.com/reference/android/app/Fragment.html?hl=zh-cn#setRetainInstance(boolean)
-                // 如果在 XML 中使用 <Fragment/> 标签,的方式创建 Fragment 请务必在标签中加上 android:id 或者 android:tag 属性,否则 setRetainInstance(true) 无效
-                // 在 Activity 中绑定少量的 Fragment 建议这样做,如果需要绑定较多的 Fragment 不建议设置此参数,如 ViewPager 需要展示较多 Fragment
-                f.setRetainInstance(true);
-            }
-
-            @Override
-            public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
-                ((RefWatcher) ArmsUtils
-                        .obtainAppComponentFromContext(f.getActivity())
-                        .extras()
-                        .get(IntelligentCache.KEY_KEEP + RefWatcher.class.getName()))
-                        .watch(f);
-            }
-        });
+//        lifecycles.add(new FragmentLifecycle()); //arms依赖包下的com.jess.arms.integration;是FragmentLifecycleCallbacks的默认实现
+//        lifecycles.add(new FragmentLifecycleForRxLifecycle());// arms依赖包下的com.jess.arms.integration.lifecycle;
+        //TODO 注意此处会先调用arms依赖包下的com.jess.arms.integration.FragmentLifecycle(FragmentLifecycleCallbacks的默认实现类)的对应方法,然后再调用FragmentLifecycleCallbacksImpl的对应方法
+        lifecycles.add(new FragmentLifecycleCallbacksImpl());
     }
 
 }

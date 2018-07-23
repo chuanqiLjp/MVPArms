@@ -57,7 +57,9 @@ public class ResponseErrorListenerImpl implements ResponseErrorListener {
             msg = convertStatusCode(httpException);
         } else if (t instanceof JsonParseException || t instanceof ParseException || t instanceof JSONException || t instanceof JsonIOException) {
             msg = "数据解析错误";
-        }
+        }/*else if (t instanceof ApiException){
+            msg=((ApiException) t).getErrormsg();
+        }*/
         ArmsUtils.snackbarText(msg);
     }
 

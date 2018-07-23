@@ -17,26 +17,40 @@ android {
         versionCode rootProject.ext.android["versionCode"]
         versionName rootProject.ext.android["versionName"]
         testInstrumentationRunner rootProject.ext.dependencies["androidJUnitRunner"]
+        //定义全局通用的变量,不分debug和release模式,buildConfigField 一共有3个参数，第一个是数据类型，和Java的类型是对等的；第二个参数是常量名，这里是API_SERVER_URL；第三个参数就是你要配置的值。
+        buildConfigField 'int', 'BTN_REPET_CLICK_PART_TIME', '5'//按钮重复点击的间隔时间,用于防抖操作
+        buildConfigField 'int', 'pageNumber', '30'//分页展示的数据量
     }
 
     buildTypes {
         debug {
-            buildConfigField "boolean", "LOG_DEBUG", "true"
-            buildConfigField "boolean", "USE_CANARY", "true"
+            //这两个变量是自定义的,自己也可以自定义字段,他会默认配置到BuildConfig中,app中可以根据这些字段执行一些操作
+            buildConfigField "boolean", "LOG_DEBUG", "true" // 日志的调试模式
+            buildConfigField "boolean", "USE_CANARY", "true"    //是否使用LeakCanary(内存泄漏检测)
+            buildConfigField "boolean", "APP_DEBUG", "true"    //是否是调试模式(替换默认的DEBUG字段)
+            buildConfigField "boolean", "LOG_DEBUG_API", "false"    //是否打印第三方框架的日志
+            buildConfigField "boolean", "USE_DATA", "true"    //是否使用模拟数据
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         release {
-            buildConfigField "boolean", "LOG_DEBUG", "false"
-            buildConfigField "boolean", "USE_CANARY", "false"
+            buildConfigField "boolean", "LOG_DEBUG", "false" // 日志的调试模式
+            buildConfigField "boolean", "USE_CANARY", "false"    //是否使用LeakCanary(内存泄漏检测)
+            buildConfigField "boolean", "APP_DEBUG", "false"    //是否是调试模式(替换默认的DEBUG字段)
+            buildConfigField "boolean", "LOG_DEBUG_API", "false"    //是否打印第三方框架的日志
+            buildConfigField "boolean", "USE_DATA", "false"    //是否使用模拟数据
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    repositories {//设置aar包的存放路径
+        flatDir {
+            dirs 'libs'
+        }
+    }
     lintOptions {
         disable 'InvalidPackage'
         disable "ResourceType"

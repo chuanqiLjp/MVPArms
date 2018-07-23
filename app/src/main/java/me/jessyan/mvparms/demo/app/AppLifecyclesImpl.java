@@ -65,9 +65,15 @@ public class AppLifecyclesImpl implements AppLifecycles {
 //                            Logger.log(priority, tag, message, t);
 //                        }
 //                    });
-            ButterKnife.setDebug(true);
         }
-        //LeakCanary 内存泄露检查
+        //  注解的模式设置
+        ButterKnife.setDebug(BuildConfig.LOG_DEBUG_API);
+
+
+
+
+
+        //LeakCanary 内存泄露检查,只需要在Fragment#onDestory中watch(fragment)就可以了,不需要再Activity中观察了
         //使用 IntelligentCache.KEY_KEEP 作为 key 的前缀, 可以使储存的数据永久存储在内存中
         //否则存储在 LRU 算法的存储空间中, 前提是 extras 使用的是 IntelligentCache (框架默认使用)
         ArmsUtils.obtainAppComponentFromContext(application).extras().put(IntelligentCache.KEY_KEEP + RefWatcher.class.getName(), BuildConfig.USE_CANARY ? LeakCanary.install(application) : RefWatcher.DISABLED);

@@ -22,8 +22,13 @@ import com.google.gson.reflect.TypeToken;
 import com.jess.arms.http.GlobalHttpHandler;
 import com.jess.arms.http.log.RequestInterceptor;
 import com.jess.arms.utils.ArmsUtils;
+import com.jess.arms.utils.DataHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
+import java.util.UUID;
 
 import me.jessyan.mvparms.demo.mvp.model.entity.User;
 import okhttp3.Interceptor;
@@ -58,6 +63,25 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
      */
     @Override
     public Response onHttpResultResponse(String httpResult, Interceptor.Chain chain, Response response) {
+//      自定义异常，参考代码如下
+//        try {
+////            Log.e(TAG, response.body().string());
+//            if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
+//                JSONObject jsonObject = new JSONObject(httpResult);
+//                boolean success = jsonObject.getBoolean("success");
+//                int code = jsonObject.getInt("code");
+////                success = success && Api.RequestSuccess.equals("" + code);
+//                if (!success) {
+//                    String msg = jsonObject.getString("message");
+//                    throw new ApiException(msg, code);
+//                }
+//            }
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            return response;
+//        }
+
         if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
             try {
                 List<User> list = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<List<User>>() {
@@ -69,6 +93,8 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
                 return response;
             }
         }
+
+
 
         /* 这里如果发现 token 过期, 可以先请求最新的 token, 然后在拿新的 token 放入 Request 里去重新请求
         注意在这个回调之前已经调用过 proceed(), 所以这里必须自己去建立网络请求, 如使用 Okhttp 使用新的 Request 去请求
@@ -96,6 +122,25 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
         /* 如果需要再请求服务器之前做一些操作, 则重新返回一个做过操作的的 Request 如增加 Header, 不做操作则直接返回参数 request
         return chain.request().newBuilder().header("token", tokenId)
                               .build(); */
+//        参考代码如下
+//        Request.Builder requestbuilder = chain.request().newBuilder();
+//
+//        String timestamp = "" + System.currentTimeMillis(); //时间戳
+//        String timestampEn = Security.aesEncrypt(timestamp, AppConstant.aesDefaultKey);
+//        requestbuilder.addHeader("timestamp", timestampEn);
+//
+//        String nonce = UUID.randomUUID().toString();//随机数,无限制
+//        String nonceEn = Security.aesEncrypt(nonce, AppConstant.aesDefaultKey);
+//        requestbuilder.addHeader("nonce", nonceEn);
+//
+//        String signature = ArmsUtils.encodeToMD5(timestamp + nonce + AppConstant.staffId);
+//        String signatureEn = Security.aesEncrypt(signature, AppConstant.aesDefaultKey);
+//        requestbuilder.addHeader("signature", signature);
+//        String token = DataHelper.getStringSF(context, AppConstant.SpKey.token);
+//        if (!TextUtils.isEmpty(token)) {
+//            requestbuilder.addHeader("Authorization", token);
+//        }
+//        return requestbuilder.build();
         return request;
     }
 }

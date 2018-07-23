@@ -118,17 +118,17 @@ public class UserActivity extends BaseActivity<UserPresenter> implements UserCon
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void showMessage(@NonNull String message) {
-        checkNotNull(message);
-        ArmsUtils.snackbarText(message);
-    }
-
-    @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        ArmsUtils.startActivity(intent);
-    }
+//    @Override
+//    public void showMessage(@NonNull String message) {
+//        checkNotNull(message);
+//        ArmsUtils.snackbarText(message);
+//    }
+//
+//    @Override
+//    public void launchActivity(@NonNull Intent intent) {
+//        checkNotNull(intent);
+//        ArmsUtils.startActivity(intent);
+//    }
 
     @Override
     public void killMyself() {

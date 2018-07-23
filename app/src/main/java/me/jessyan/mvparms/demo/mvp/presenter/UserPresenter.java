@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
+import com.jess.arms.utils.ArmsUtils;
 import com.jess.arms.utils.PermissionUtil;
 import com.jess.arms.utils.RxLifecycleUtils;
 
@@ -91,12 +92,12 @@ public class UserPresenter extends BasePresenter<UserContract.Model, UserContrac
 
             @Override
             public void onRequestPermissionFailure(List<String> permissions) {
-                mRootView.showMessage("Request permissions failure");
+                ArmsUtils.snackbarText("Request permissions failure");
             }
 
             @Override
             public void onRequestPermissionFailureWithAskNeverAgain(List<String> permissions) {
-                mRootView.showMessage("Need to go to the settings");
+                ArmsUtils.snackbarText("Need to go to the settings");
             }
         }, mRootView.getRxPermissions(), mErrorHandler);
 

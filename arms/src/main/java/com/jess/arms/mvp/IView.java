@@ -57,17 +57,17 @@ public interface IView {
      *
      * @param message 消息内容, 不能为 {@code null}
      */
-    void showMessage(@NonNull String message);
+//    void showMessage(@NonNull String message);
 
     /**
      * 跳转 {@link Activity}
      *
      * @param intent {@code intent} 不能为 {@code null}
      */
-    default void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        ArmsUtils.startActivity(intent);
-    }
+//    default void launchActivity(@NonNull Intent intent) {
+//        checkNotNull(intent);
+//        ArmsUtils.startActivity(intent);
+//    }
 
     /**
      * 杀死自己
